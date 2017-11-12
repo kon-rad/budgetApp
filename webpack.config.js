@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var node_modules_dir = path.join(__dirname, 'node_modules');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var config = {
     entry: [
@@ -16,8 +17,11 @@ var config = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new ExtractTextPlugin({ filename: 'style.css', allChunks: true }),
+        new CopyWebpackPlugin.default([
+          { from: './app/Resources/lib', to: './lib' }
+        ])
     ],
     module: {
         rules: [

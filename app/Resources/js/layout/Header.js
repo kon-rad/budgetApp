@@ -1,23 +1,23 @@
 import React from 'react';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
 const Header = () => {
     return (
-        <Navbar>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <a href="/">BudgetApp</a>
-                </Navbar.Brand>
-                <Navbar.Toggle />
-            </Navbar.Header>
-            <Navbar.Collapse>
-                <Nav>
-                    <NavItem href="home">Home</NavItem>
-                    <NavItem href="page1">About</NavItem>
-                    <NavItem href="page2">Start</NavItem>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
+        <nav className="navbar navbar-toggleable-md navbar-light bg-faded">
+            <a className="navbar-brand" href="#">BudetApp</a>
+            <div className=" navbar-collapse" id="navList">
+                <ul className="navbar-nav">
+                    <li className="nav-item">
+                        <a href="#"> Home</a>
+                    </li>
+                    <li className="nav-item" href="#">
+                        <a href="#"> About</a>
+                    </li>
+                    <li className="nav-item" href="#">
+                        <a href="#">Start</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     );
 };
 

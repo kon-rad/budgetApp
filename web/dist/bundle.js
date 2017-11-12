@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ac50e9c8dbbbf92ef0aa"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ba98d2d572c724147470"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -10721,12 +10721,11 @@ var _Home2 = _interopRequireDefault(_Home);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Page1 from './components/Page1';
-// import Page2 from './components/Page2';
-// import NoMatch from './components/NoMatch';
-
-_reactDom2.default.render(_react2.default.createElement(_Home2.default, null), document.getElementById('app'));
-// import { Switch, Route } from 'react-router-dom'
+_reactDom2.default.render(_react2.default.createElement(
+	'div',
+	null,
+	_react2.default.createElement(_Home2.default, null)
+), document.getElementById('app'));
 
 // import Layout from './Layout';
 
@@ -28011,7 +28010,7 @@ var Home = function Home() {
         _react2.default.createElement(
             'h1',
             null,
-            'Hello world!'
+            'Hello world!!!@w'
         )
     );
 };
