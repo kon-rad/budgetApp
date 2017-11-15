@@ -1,28 +1,44 @@
 <?php
 
 namespace AppBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Budget
  *
  * @ORM\Table(name="budget")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TodoRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BudgetRepository")
  */
 class Budget
 {
     /**
      * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="item", type="string", length=255)
      */
-    private $description;
+    private $item;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="amount", type="float")
      */
     private $amount;
 
@@ -38,27 +54,51 @@ class Budget
     }
 
     /**
-     * Set description
+     * Set item
      *
-     * @param string $description
+     * @param string $item
      *
      * @return Budget
      */
-    public function setDescription($description)
+    public function setItem($item)
     {
-        $this->description = $description;
+        $this->item = $item;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get item
      *
      * @return string
      */
-    public function getDescription()
+    public function getItem()
     {
-        return $this->description;
+        return $this->item;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Budget
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 
     /**

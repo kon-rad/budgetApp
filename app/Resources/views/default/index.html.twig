@@ -4,16 +4,28 @@
         <div id="container">
             <div id="welcome">
                 <h1>Welcome to your BudgetApp</h1>
-                {% if budgets is defined %}
-                    {% for budget in budgets %}
-                    <tr>
-                        <th scope="row">{{ budget.id }}</th>
-                        <td>{{ budget.desc }}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    No
-                {% endif %}
+                <table class="table">
+                    {% if budgets is defined %}
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Item</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgets %}
+                                <tr scope="row">
+                                    <td>{{ budget.date|date('F j, Y, g:i') }}</td>
+                                    <td>{{ budget.item }}</td>
+                                    <td><strong>{{ budget.amount}}</strong></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    {% else %}
+                        No
+                    {% endif %}
+                </table>
             </div>
 
 
@@ -22,7 +34,6 @@
 
         </div>
     </div>
-    <div id="app"></div>
 {% endblock %}
 
 {% block stylesheets %}
