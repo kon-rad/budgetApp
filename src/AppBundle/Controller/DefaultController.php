@@ -5,6 +5,7 @@ use AppBundle\Entity\Budget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -23,13 +24,13 @@ class DefaultController extends Controller
             ->findAll();
 
 
-        return $this->render('default/index.html.twig', array(
+        return $this->render('budget/index.html.twig', array(
             'budgets' => $budgets,
         ));
     }
 
     /**
-     * @Route("/create/item", name="add_item")
+     * @Route("/budget/create", name="add_item")
      */
     public function createAction(Request $request)
     {
@@ -61,8 +62,25 @@ class DefaultController extends Controller
         }
 
 
-        return $this->render('default/index.html.twig', array(
+        return $this->render('budget/index.html.twig', array(
             'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/budget/edit/{id}", name="budget_edit")
+     */
+    public function editAction(Request $request)
+    {
+
+        $id = $request->attributes->get('id');
+        $budget = this->getDoctrine()->getRepositiory('AppBundle:Todo')->findOneBy(array('id' => $id));
+
+        $budget->set
+
+
+        return $this->render('budget/edit.html.twig', array(
+            'id' => $id,
         ));
     }
 }
