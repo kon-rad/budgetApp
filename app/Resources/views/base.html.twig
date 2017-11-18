@@ -20,7 +20,17 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="conatiner">
+            <div class="row">
+                <div class="col-md-12">
+                    {%  for flash_message in app.session.flashbag.get('notice') %}
+                        <div class="alert alert-success">{{ flash_message }}</div>
+                    {% endfor %}
+                    {% block body %}{% endblock %}
+
+                </div>
+            </div>
+        </div>
         {% block javascripts %}
             </script>
             {% if app.environment == 'dev' %}

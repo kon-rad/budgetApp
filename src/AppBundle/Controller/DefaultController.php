@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="budget_list")
      */
     public function indexAction(Request $request)
     {
@@ -58,7 +58,12 @@ class DefaultController extends Controller
             $em->persist($budget);
             $em->flush();
 
-            return $this->redirectToRoute('homepage');
+            $this->addFlash(
+                'notice',
+                'Item Added'
+            );
+
+            return $this->redirectToRoute('budget_list');
         }
 
 
@@ -74,13 +79,65 @@ class DefaultController extends Controller
     {
 
         $id = $request->attributes->get('id');
-        $budget = this->getDoctrine()->getRepositiory('AppBundle:Todo')->findOneBy(array('id' => $id));
+        $budget = $this->getDoctrine()
+            ->getRepository('AppBundle:Budget')
+            ->findOneBy(array('id' => $id));
 
-        $budget->set
+        $budget->setItem($budget->getItem());
+        $budget->setAmount($budget->getAmount());
+        $budget->setDate($budget->getDate());
 
+        $form = $this->createFormBuilder($budget)
+            ->add('item', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
+            ->add('amount', MoneyType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
+            ->add('date', DateType::class, array('attr' => array('class' => 'formControl', 'style' => 'margin-bottom:15px')))
+            ->add('save', SubmitType::class, array('label'=>'Edit Item', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom:15px')))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() and $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $budget = $em->getRepository('AppBundle:Budget')->find($id);
+            $budget->setItem($form['item']->getData());
+            $budget->setAmount($form['amount']->getData());
+            $budget->setDate($form['date']->getData());
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Item Edited'
+            );
+
+            return $this->redirectToRoute('budget_list');
+        }
 
         return $this->render('budget/edit.html.twig', array(
-            'id' => $id,
+            'budget' => $budget,
+            'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Route("/budget/delete/{id}", name="budget_delete")
+     */
+    public function deleteAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $budget = $this->getDoctrine()
+            ->getRepository('AppBundle:Budget')
+            ->findOneBy(array('id' => $id));
+
+        $em->remove($budget);
+        $em->flush();
+
+        $this->addFlash(
+            'notice',
+            'Item Removed'
+        );
+
+        return $this->redirectToRoute('budget_list');
     }
 }

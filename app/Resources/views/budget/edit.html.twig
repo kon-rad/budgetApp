@@ -6,15 +6,11 @@
                 <h1>Welcome to your BudgetApp</h1>
                 <div class="row">
                     <div class="col-xs-12">
-                        <a href="/create/item" class="btn btn-primary">Add New Item</a>
+                        <a href="/budget/create" class="btn btn-primary">Add New Item</a>
                     </div>
                 </div>
+                <h3>Edit Item</h3>
                 <table class="table">
-                    {% if id is defined %}
-                        <h1>{{id}}</h1>
-                    {% else %}
-                        No
-                    {% endif %}
                     {% if form is defined %}
                         {{form_start(form)}}
                         {{form_widget(form)}}

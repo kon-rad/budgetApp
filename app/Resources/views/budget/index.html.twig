@@ -5,8 +5,8 @@
             <div id="welcome">
                 <h1>Welcome to your BudgetApp</h1>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <a href="/create/item" class="btn btn-primary">Add New Item</a>
+                    <div class="col-sm-12">
+                        <a href="/budget/create" class="btn btn-primary">Add New Item</a>
                     </div>
                 </div>
                 <table class="table">
@@ -25,7 +25,7 @@
                                     <td>{{ budget.date|date('F j, Y, g:i') }}</td>
                                     <td>{{ budget.item }}</td>
                                     <td><strong>{{ budget.amount}}</strong></td>
-                                    <td><a class="btn btn-warning" href="/edit/{{ budget.id}}">Edit</a><a class="btn btn-danger" href="/delete/{{ budget.id}}">Delete</a></td>
+                                    <td><a class="btn btn-warning" href="/budget/edit/{{ budget.id}}">Edit</a><a class="btn btn-danger" href="/budget/delete/{{ budget.id}}">Delete</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
