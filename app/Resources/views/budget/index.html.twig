@@ -15,6 +15,7 @@
                             <tr>
                                 <th scope="col">Date</th>
                                 <th scope="col">Item</th>
+                                <th scope="col">Category</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Actions</th>
                             </tr>
@@ -24,6 +25,7 @@
                                 <tr scope="row">
                                     <td>{{ budget.date|date('F j, Y, g:i') }}</td>
                                     <td>{{ budget.item }}</td>
+                                    <td>{{ budget.category }}</td>
                                     <td><strong>{{ budget.amount}}</strong></td>
                                     <td><a class="btn btn-warning" href="/budget/edit/{{ budget.id}}">Edit</a><a class="btn btn-danger" href="/budget/delete/{{ budget.id}}">Delete</a></td>
                                 </tr>

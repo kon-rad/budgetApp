@@ -29,6 +29,13 @@ class Budget
     private $item;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="category", type="string", length=255)
+     */
+    private $category;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -75,6 +82,30 @@ class Budget
     public function getItem()
     {
         return $this->item;
+    }
+
+    /**
+     * Set category
+     *
+     * @param string $category
+     *
+     * @return Budget
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $category;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     /**

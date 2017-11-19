@@ -3,6 +3,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Budget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -18,7 +20,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+
         $budgets = $this->getDoctrine()
             ->getRepository('AppBundle:Budget')
             ->findAll();
@@ -30,7 +32,33 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/budgets", name="get_budgets")
+     * @Method({"GET"})
+     */
+    public function getBudgetsAction()
+    {
+        $budgets = $this->getDoctrine()
+            ->getRepository('AppBundle:Budget')
+            ->findAll();
+
+        $budgets = array_map(function(Budget $budget) {
+            return [
+                "id" => $budget->getId(),
+                "item" => $budget->getItem(),
+                "category" => $budget->getCategory(),
+                "amount" => $budget->getAmount(),
+                "date" => $budget->getDate()
+            ];
+        }, $budgets);
+        return new JsonResponse([
+            "status" => "success",
+            "budgets" => $budgets,
+        ]);
+    }
+
+    /**
      * @Route("/budget/create", name="add_item")
+     * @Method({"POST"})
      */
     public function createAction(Request $request)
     {
@@ -38,6 +66,7 @@ class DefaultController extends Controller
 
         $form = $this->createFormBuilder($budget)
             ->add('item', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
+            ->add('category', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
             ->add('amount', MoneyType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
             ->add('date', DateType::class, array('attr' => array('class' => 'formControl', 'style' => 'margin-bottom:15px')))
             ->add('save', SubmitType::class, array('label'=>'Add Item', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom:15px')))
@@ -47,10 +76,12 @@ class DefaultController extends Controller
 
         if($form->isSubmitted() && $form->isValid()) {
             $item = $form['item']->getData();
+            $category = $form['category']->getData();
             $date = $form['date']->getData();
             $amount = $form['amount']->getData();
 
             $budget->setItem($item);
+            $budget->setCategory($category);
             $budget->setDate($date);
             $budget->setAmount($amount);
 
@@ -89,6 +120,7 @@ class DefaultController extends Controller
 
         $form = $this->createFormBuilder($budget)
             ->add('item', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
+            ->add('category', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
             ->add('amount', MoneyType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
             ->add('date', DateType::class, array('attr' => array('class' => 'formControl', 'style' => 'margin-bottom:15px')))
             ->add('save', SubmitType::class, array('label'=>'Edit Item', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom:15px')))
@@ -101,6 +133,7 @@ class DefaultController extends Controller
 
             $budget = $em->getRepository('AppBundle:Budget')->find($id);
             $budget->setItem($form['item']->getData());
+            $budget->setCategory(($form['category']->getData()));
             $budget->setAmount($form['amount']->getData());
             $budget->setDate($form['date']->getData());
 
