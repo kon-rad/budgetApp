@@ -36,9 +36,9 @@ class Budget
     private $category;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="integer")
      */
     private $date;
 
@@ -111,7 +111,7 @@ class Budget
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param integer $date
      *
      * @return Budget
      */
@@ -125,7 +125,7 @@ class Budget
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return integer
      */
     public function getDate()
     {
@@ -149,7 +149,7 @@ class Budget
     /**
      * Get amount
      *
-     * @return int
+     * @return integer
      */
     public function getAmount()
     {

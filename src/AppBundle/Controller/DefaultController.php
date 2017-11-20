@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +34,9 @@ class DefaultController extends Controller
     /**
      * @Route("/budgets", name="get_budgets")
      * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getBudgetsAction()
     {
@@ -57,28 +60,23 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/budget/create", name="add_item")
+     * @Route("/budgets", name="add_item")
      * @Method({"POST"})
+     *
+     * @param Request $request
+     * @param $budget
+     *
+     * @return JsonResponse
      */
     public function createAction(Request $request)
     {
         $budget = new Budget;
 
-        $form = $this->createFormBuilder($budget)
-            ->add('item', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('category', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('amount', MoneyType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('date', DateType::class, array('attr' => array('class' => 'formControl', 'style' => 'margin-bottom:15px')))
-            ->add('save', SubmitType::class, array('label'=>'Add Item', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom:15px')))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $item = $form['item']->getData();
-            $category = $form['category']->getData();
-            $date = $form['date']->getData();
-            $amount = $form['amount']->getData();
+        if(!empty($budget)) {
+            $item = $request->request->get('item', '');
+            $category = $request->request->get('category', '');
+            $date = $request->request->get('date', '');
+            $amount = $request->request->get('amount', '');
 
             $budget->setItem($item);
             $budget->setCategory($category);
@@ -89,74 +87,61 @@ class DefaultController extends Controller
             $em->persist($budget);
             $em->flush();
 
-            $this->addFlash(
-                'notice',
-                'Item Added'
-            );
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Item added successfully'
+            ]);
 
-            return $this->redirectToRoute('budget_list');
         }
-
-
-        return $this->render('budget/index.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return new JsonResponse([
+            'status' => 'error',
+            'message' => 'No request body',
+        ]);
     }
 
     /**
-     * @Route("/budget/edit/{id}", name="budget_edit")
+     * @Route("/budgets/{id}", name="budget_edit")
+     *@Method({"PUT"})
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return JsonResponse
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
 
-        $id = $request->attributes->get('id');
-        $budget = $this->getDoctrine()
-            ->getRepository('AppBundle:Budget')
-            ->findOneBy(array('id' => $id));
+        $budget = $em->getRepository('AppBundle:Budget')->find($id);
 
-        $budget->setItem($budget->getItem());
-        $budget->setAmount($budget->getAmount());
-        $budget->setDate($budget->getDate());
+        $item = $request->request->get('item', '');
+        $category = $request->request->get('category', '');
+        $date = $request->request->get('date', '');
+        $amount = $request->request->get('amount', '');
 
-        $form = $this->createFormBuilder($budget)
-            ->add('item', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('category', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('amount', MoneyType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-            ->add('date', DateType::class, array('attr' => array('class' => 'formControl', 'style' => 'margin-bottom:15px')))
-            ->add('save', SubmitType::class, array('label'=>'Edit Item', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom:15px')))
-            ->getForm();
+        $budget->setItem($item);
+        $budget->setCategory($category);
+        $budget->setAmount($amount);
+        $budget->setDate($date);
 
-        $form->handleRequest($request);
+        $em->flush();
 
-        if ($form->isSubmitted() and $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $budget = $em->getRepository('AppBundle:Budget')->find($id);
-            $budget->setItem($form['item']->getData());
-            $budget->setCategory(($form['category']->getData()));
-            $budget->setAmount($form['amount']->getData());
-            $budget->setDate($form['date']->getData());
-
-            $em->flush();
-
-            $this->addFlash(
-                'notice',
-                'Item Edited'
-            );
-
-            return $this->redirectToRoute('budget_list');
-        }
-
-        return $this->render('budget/edit.html.twig', array(
-            'budget' => $budget,
-            'form' => $form->createView(),
-        ));
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Item edited successfully'
+        ]);
     }
 
     /**
-     * @Route("/budget/delete/{id}", name="budget_delete")
+     * @Route("/budgets/{id}", name="budget_delete")
+     *@Method({"DELETE"})
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return JsonResponse
      */
-    public function deleteAction($id, Request $request)
+    public function deleteAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $budget = $this->getDoctrine()
@@ -165,11 +150,6 @@ class DefaultController extends Controller
 
         $em->remove($budget);
         $em->flush();
-
-        $this->addFlash(
-            'notice',
-            'Item Removed'
-        );
 
         return $this->redirectToRoute('budget_list');
     }
