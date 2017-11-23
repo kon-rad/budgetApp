@@ -15,21 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/", name="budget_list")
-     */
-    public function indexAction(Request $request)
-    {
-
-        $budgets = $this->getDoctrine()
-            ->getRepository('AppBundle:Budget')
-            ->findAll();
-
-
-        return $this->render('budget/index.html.twig', array(
-            'budgets' => $budgets,
-        ));
-    }
 
     /**
      * @Route("/budgets", name="get_budgets")
