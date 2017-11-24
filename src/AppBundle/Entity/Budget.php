@@ -111,7 +111,7 @@ class Budget
     /**
      * Set date
      *
-     * @param integer $date
+     * @param int $date
      *
      * @return Budget
      */
@@ -149,7 +149,7 @@ class Budget
     /**
      * Get amount
      *
-     * @return integer
+     * @return int
      */
     public function getAmount()
     {
