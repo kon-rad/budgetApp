@@ -71,8 +71,8 @@ Feature: Handle user registration via the RESTful API
         "email": "frodo@test.com",
         "username": "frodo",
         "plainPassword": {
-          "first": "precious",
-          "second": "precious"
+          "first": "precious123",
+          "second": "precious456"
         }
       }
       """
